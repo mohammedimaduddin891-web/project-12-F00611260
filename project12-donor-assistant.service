@@ -1,0 +1,31 @@
+[Unit]
+Description=Project 12 Synthetic Donor Assistant
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+
+WorkingDirectory=/home/ubuntu/project-12-F00611260
+
+EnvironmentFile=/home/ubuntu/project-12-F00611260/.env
+
+ExecStart=/home/ubuntu/project12-venv/bin/gunicorn \
+  --workers 1 \
+  --threads 4 \
+  --timeout 180 \
+  --bind 127.0.0.1:8012 \
+  app:app
+
+Restart=on-failure
+RestartSec=5
+
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+
+[Install]
+WantedBy=multi-user.target

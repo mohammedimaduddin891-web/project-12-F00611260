@@ -1,0 +1,72 @@
+[
+  {
+    "donor_id": "SYN-001",
+    "first_name": "Asha",
+    "gift_amount": 125.00,
+    "relief_area": "flood-response food kits",
+    "channel": "email"
+  },
+  {
+    "donor_id": "SYN-002",
+    "first_name": "Daniel",
+    "gift_amount": 80.00,
+    "relief_area": "clean-water distribution",
+    "channel": "email"
+  },
+  {
+    "donor_id": "SYN-003",
+    "first_name": "Mira",
+    "gift_amount": 250.00,
+    "relief_area": "temporary family shelter",
+    "channel": "letter"
+  },
+  {
+    "donor_id": "SYN-004",
+    "first_name": "Samuel",
+    "gift_amount": 50.00,
+    "relief_area": "emergency hygiene supplies",
+    "channel": "email"
+  },
+  {
+    "donor_id": "SYN-005",
+    "first_name": "Leah",
+    "gift_amount": 175.00,
+    "relief_area": "medical relief supplies",
+    "channel": "letter"
+  },
+  {
+    "donor_id": "SYN-006",
+    "first_name": "Noah",
+    "gift_amount": 95.00,
+    "relief_area": "children's nutrition support",
+    "channel": "email"
+  },
+  {
+    "donor_id": "SYN-007",
+    "first_name": "Priya",
+    "gift_amount": 300.00,
+    "relief_area": "community rebuilding materials",
+    "channel": "letter"
+  },
+  {
+    "donor_id": "SYN-008",
+    "first_name": "Elias",
+    "gift_amount": 60.00,
+    "relief_area": "emergency blankets and clothing",
+    "channel": "email"
+  },
+  {
+    "donor_id": "SYN-009",
+    "first_name": "Hannah",
+    "gift_amount": 140.00,
+    "relief_area": "mobile health clinics",
+    "channel": "email"
+  },
+  {
+    "donor_id": "SYN-010",
+    "first_name": "Omar",
+    "gift_amount": 210.00,
+    "relief_area": "disaster recovery transportation",
+    "channel": "letter"
+  }
+]

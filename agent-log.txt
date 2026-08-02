@@ -1,0 +1,162 @@
+Project 12 — Agent Activity Log
+
+Student: Mohammed Imad Uddin
+Student ID: F00611260
+Course: CSC 6400 — System Administration and Maintenance (DCA)
+
+1. ASSIGNMENT AND STARTER-FILE REVIEW
+
+Delegated task:
+I sent the AI assistant the files of the Project 12 assignment, the deploy-notes.txt file, the finops_alerts.sh file, the sample-bill.csv file, and the token_cost.py file.
+
+Agent output:
+The assistant determined that the needed deployment, cost-allocation controls, budget and alert, pre-run prediction, fixed traffic run, provider billing export, reconciliation, README.txt, agent-log.txt, and COST_REPORT.docx files are needed.
+
+Human verification:
+I checked to see if there is a working cloud AI workload and real provider cost export in the required tier, and confirmed that these are present. I left the deployed notes in deploy-notes.txt, sample-bill.csv and token_cost.py the same. I modified finops_alerts.sh to have the monthly projection as the number of days observed (rather than considering a multi-day period as 1 day).
+
+2. PROVIDER, MODEL, AND WORKLOAD SELECTION
+
+Delegated task:
+I talked to the AI assistant and asked it what it considered to be a cost-effective implementation of a serverless solution that can load in the current Oracle Cloud Ubuntu VM.
+
+Agent output:
+The assistant suggested a Flask service to call OpenAI-compatible endpoint for generating chat-completions and create thank you notes from fake donor information.
+
+Human decision and verification:
+I chose the project-scoped OpenAI Platform deployment, and gpt-5.4-mini-2026-03-17 as the model. It was a bit strange that the application only accepted donor IDs that started with SYN-, limited the completion to 150 tokens, and revealed the allocation labels for project12, lab, it, and donor-thank-you.
+
+3. COST ALLOCATION, BUDGET, AND ALERT
+
+Provider project:
+project12-grace-mercy-relief
+
+Project-scoped API-key name recorded in the repository:
+project12-env-lab-team-it-workload-donor-letters
+
+Local allocation labels:
+project=project12
+env=lab
+team=it
+workload=donor-thank-you
+
+With $5.00 budget and threshold of 80% in finops_alerts.sh, I did not get any alerts.
+Determine the budget and alert parameters on the provider side before generating.
+traffic. Hence, the evidence submitted shows the local alerting.
+In the case of control but not claim: before, the provider-side control was configured.
+the run.
+
+4. INITIAL QUOTA ERROR AND HUMAN INTERVENTION
+
+Observed issue:
+A rate limit error occurred with insufficient_quota code from OpenAI at 09:19:10 UTC in the service log.An OpenAI RateLimitError occurred at 09:19:10 UTC with code insufficient_quota in the service log. The local service of Flask/Gunicorn was still running.
+
+Human intervention:
+I checked a provider account quota and billing condition prior to continuing. Once the quota condition was removed, the final paid smoke test was successful as well as the full 200-request workload. I didn't think of treating 429 error as a successful deployment result in the previous one.
+
+5. PRE-RUN COST PREDICTION
+
+Prediction timestamp:
+Sun Aug 2 09:39:38 UTC 2026
+
+Prediction assumptions:
+200 requests
+350 input tokens per request
+150 output tokens per request
+$0.75 per million input tokens
+$4.50 per million output tokens
+
+Recorded arithmetic:
+70,000 planned input tokens cost $0.052500.
+30,000 planned output tokens cost $0.135000.
+The exact prediction was $0.187500, rounded by token_cost.py to $0.19.
+
+Human verification:
+I ran token_cost.py and preserved output/prediction-timestamp.txt and
+output/predicted-cost.txt before making the successful paid smoke-test request.
+I then used smoke_test.sh for the smoke test and run_workload.py for the fixed
+200-request workload.
+
+6. DEPLOYMENT AND SMOKE TEST
+
+Deployment result:
+project12-donor-assistant.service was loaded, enabled, and active under Gunicorn on 127.0.0.1:8012.
+
+Final smoke-test result:
+PASS
+
+Smoke-test usage:
+127 prompt tokens
+85 completion tokens
+0 cached input tokens
+0 reasoning tokens
+212 total tokens
+
+Human verification:
+I confirmed that the response used SYN-SMOKE-001, returned a donor thank-you letter, used gpt-5.4-mini-2026-03-17, and reported a provider request ID.
+
+7. FIXED PAID WORKLOAD
+
+Run window:
+2026-08-02 09:42:17.964228 UTC to 09:47:03.000268 UTC
+
+Requested: 200
+Succeeded: 200
+Failed: 0
+
+Measured workload tokens:
+24,280 prompt tokens
+0 cached input tokens
+16,462 completion tokens
+0 reasoning tokens
+40,742 total tokens
+
+Usage-derived workload cost:
+$0.092289
+
+Human verification:
+I saved out output/workload-console.txt, output/workload_summary.json and the detailed request log. Seeing the summary and console, you can see that all 200 fixed-run requests are finished successfully.
+
+8. REAL PROVIDER BILLING EXPORT
+
+Provider export period:
+2026-08-02 00:00:00 UTC to 2026-08-03 00:00:00 UTC
+
+Provider project:
+project12-grace-mercy-relief
+
+Provider-exported usage:
+24,407 input tokens costing $0.01830525
+0 cached input tokens costing $0.00000000
+16,547 output tokens costing $0.07446150
+
+Actual provider cost:
+$0.09276675
+
+Human verification:
+I take the .csv file which is not used for any cost calculation, untouched openai-cost-export.csv, and generate billing/actual-cost-summary.csv as a normalization to pass to the finops_alerts.sh file.
+
+9. PREDICTION RECONCILIATION
+
+Pre-run prediction: $0.187500
+Workload-only usage estimate: $0.092289
+Provider actual: $0.09276675
+Actual minus prediction: -$0.09473325
+Percentage variance: -50.52%
+
+Evidence-based explanation:
+The prediction made a conscious decision to use up to 350 input, and 150 output tokens per request, for 200 requests. The actual token volume per request was just 121.40 input tokens and 82.31 output tokens – significantly less than the intended volume. No discount due to cached input as cached input was 0. The provider export had 127 and 85 more input and output tokens, respectively, than the workload summary. These additional tokens are exactly as would be paid in the smoke test, and cost $0.00047775, which is the same as the provider actual of $0.00047775, and exactly reconciles the workload-only estimate of $0.092289 to the provider actual of $0.09276675.
+
+10. FINOPS ALERT RESULT
+
+Actual observed cost: $0.092767
+Thirty-day projection from one observed day: $2.783010
+Monthly budget used by the script: $5.00
+Alert threshold: 80%, or $4.00
+Verdict: ok
+
+The sample-bill practice run correctly raised alerts for donor-letters and idle-test-vm, demonstrating that the adapted script can identify a projected monthly overrun.
+
+11. FINAL ACCOUNTABILITY
+
+The AI tools were employed in reviewing the start files, structuring the scripts, fault diagnosis, performing arithmetic checks, and generating first draft documents. I personally chose the provider project and model, checked the code, protected the provider API key, noted the provider cost prediction prior to successful paid run, solved the quota condition, ran the smoke test and 200-request workload, downloaded the provider actual billing export, crosschecked the API key and the cost reconciliation and held final operational and financial judgment.

@@ -1,0 +1,62 @@
+# deploy-notes.md — provider-agnostic deploy + cost-export checklist (P12)
+
+A short, vendor-neutral checklist for standing up the P12 workload and finding
+the bill. Names/prices are mid-2026 snapshots — re-verify at the live console.
+**No real secrets. No real PII. Tag before you run. Budget before you run.**
+
+## 0. Before you deploy
+
+- [ ] Pick ONE path: **serverless model API** (rent cognition) OR **self-host on a cloud GPU** (rent the machine, own the model).
+- [ ] Write down the predicted cost first (use `token_cost.py`). You cannot fudge a prediction you committed before the run.
+- [ ] Decide your cost-allocation tags now: `project`, `env`, `team`.
+
+## 1A. Path A — Serverless model API
+
+Write the app against the **OpenAI-compatible `/v1/chat/completions`** shape so
+only `base_url` + key change. This preserves portability (your anti-lock-in hedge).
+
+```python
+from openai import OpenAI
+client = OpenAI(base_url="$PROVIDER_BASE_URL", api_key="$PROVIDER_API_KEY")  # placeholders!
+resp = client.chat.completions.create(
+    model="$MODEL_ID",                       # pin the model ID, not a marketing name
+    messages=[{"role": "user", "content": "Draft a warm thank-you to a donor."}],
+    max_tokens=300,                          # CAP output — output costs 4-8x input
+)
+print(resp.usage)  # capture prompt_tokens / completion_tokens to reconcile the bill
+```
+
+- [ ] Capture `usage` on every call (token counts) so you can reconcile predicted vs. actual.
+- [ ] Order prompts so the stable prefix (system prompt, knowledge block) is reused → cached-input pricing.
+- [ ] For non-interactive bulk jobs, use the provider's **batch** endpoint (~50% discount).
+
+## 1B. Path B — Self-host on a cloud GPU (IaaS)
+
+- [ ] Provision a GPU instance; serve an open-weight model with vLLM/SGLang/NIM (Ch. 7).
+- [ ] It also speaks `/v1` — same client code, point `base_url` at your instance.
+- [ ] **Schedule it to STOP.** An idle GPU bills 24×7. This is the #1 self-host cost mistake.
+
+```bash
+# stop the instance outside business hours (adapt to your provider CLI)
+0 19 * * 1-5  $PROVIDER_CLI compute instances stop "$INSTANCE" --zone "$ZONE"
+0 8  * * 1-5  $PROVIDER_CLI compute instances start "$INSTANCE" --zone "$ZONE"
+```
+
+## 2. FinOps controls — wire BEFORE traffic
+
+- [ ] **Tag** every billable resource/key (`project`,`env`,`team`).
+- [ ] **Budget** per project with alert thresholds (50% / 80% / 100%).
+- [ ] **Hard cap** where supported (stops runaway loops / abused keys). Budgets warn; caps stop.
+- [ ] **Anomaly alert** on daily-spend deviation (see `finops_alerts.sh`).
+
+## 3. Where the bill lives (cost export)
+
+| Provider (as of 2026) | Cost export |
+|---|---|
+| AWS / Bedrock | Cost Explorer; Cost & Usage Report (CUR) to S3 |
+| Microsoft Foundry / Azure | Cost Management → exports; per-deployment metrics |
+| Google Vertex AI | Billing → BigQuery export |
+| OpenAI Platform | Usage dashboard / usage API |
+
+- [ ] Pull actual cost grouped by your tag; diff against your prediction; explain the gap in `COST_REPORT.md`.
+- [ ] Note egress — moving data/models OUT of the cloud is a real, lock-in-shaped cost.
