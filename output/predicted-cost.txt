@@ -1,0 +1,4 @@
+price snapshot : $0.75/1M in, $4.5/1M out  (output is 6.0x input)
+per request    : $0.000937
+x 200 requests : $0.19
+NOTE: mid-2026 snapshot prices -- re-verify at the live console.

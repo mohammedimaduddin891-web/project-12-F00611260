@@ -1,0 +1,7 @@
+FinOps check
+source=billing/actual-cost-summary.csv
+budget=$5.00  threshold=80%  elapsed=1 day(s)  group-by=project
+-----------------------------------------------------------------------
+project12                    observed=$0.092767   projected=$2.783010   [ok]
+-----------------------------------------------------------------------
+This script is an alerting control. Provider spend-limit enforcement is separate.

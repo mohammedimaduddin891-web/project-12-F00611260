@@ -1,0 +1,19 @@
+{
+  "started_at_utc": "2026-08-02T09:42:17.964228+00:00",
+  "completed_at_utc": "2026-08-02T09:47:03.000268+00:00",
+  "requested": 200,
+  "succeeded": 200,
+  "failed": 0,
+  "prompt_tokens": 24280,
+  "cached_input_tokens": 0,
+  "completion_tokens": 16462,
+  "reasoning_tokens": 0,
+  "total_tokens": 40742,
+  "pricing_usd_per_million": {
+    "input": 0.75,
+    "cached_input": 0.075,
+    "output": 4.5
+  },
+  "usage_estimated_cost_usd": 0.092289,
+  "detail_file": "output/workload_requests.jsonl"
+}

@@ -1,0 +1,15 @@
+FinOps check
+source=sample-bill.csv
+budget=$500.00  threshold=80%  elapsed=5 day(s)  group-by=tag
+-----------------------------------------------------------------------
+field-triage                 observed=$49.500000  projected=$297.000000 [ok]
+donor-letters                observed=$97.630000  projected=$585.780000 [ALERT]
+  >> ALERT: projected spend is at or above 80% of the monthly budget.
+  >> ACTION: inspect request volume, model tier, retries, and idle resources.
+exec-summaries               observed=$52.000000  projected=$312.000000 [ok]
+batch-embeddings             observed=$16.000000  projected=$96.000000  [ok]
+idle-test-vm                 observed=$96.000000  projected=$576.000000 [ALERT]
+  >> ALERT: projected spend is at or above 80% of the monthly budget.
+  >> ACTION: inspect request volume, model tier, retries, and idle resources.
+-----------------------------------------------------------------------
+This script is an alerting control. Provider spend-limit enforcement is separate.

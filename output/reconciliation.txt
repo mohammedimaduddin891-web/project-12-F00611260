@@ -1,0 +1,5 @@
+Pre-run prediction: $0.187500
+Usage-derived estimate: $0.092289
+Provider actual cost: $0.092767
+Actual minus predicted: $-0.094733
+Percentage variance: -50.52%
